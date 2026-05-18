@@ -11,7 +11,8 @@
  * fetch is available in both Bun and the browser natively.
  */
 
-export const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
+const rawSocketUrl = import.meta.env.VITE_API_URL || "http://localhost:5002";
+export const SOCKET_URL = rawSocketUrl.endsWith("/") ? rawSocketUrl.slice(0, -1) : rawSocketUrl;
 export const BASE_URL = `${SOCKET_URL}/api`;
 
 // ── Token helpers ──────────────────────────────────────────────────────────
