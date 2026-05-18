@@ -35,14 +35,11 @@ function SeniorsPage() {
 
   // Set of seniorIds that already have a request (any status: Pending/Accepted/Rejected)
   const requestedSeniorIds = new Set(
-    myRequests.map((r: any) => String(r.seniorId?._id ?? r.seniorId))
+    myRequests.map((r: any) => String(r.seniorId?._id ?? r.seniorId)),
   );
 
   // Years that are strictly higher than the current user's year
-  const validSeniorYears = useMemo(
-    () => [2, 3, 4].filter((y) => y > currentYear),
-    [currentYear]
-  );
+  const validSeniorYears = useMemo(() => [2, 3, 4].filter((y) => y > currentYear), [currentYear]);
 
   const { data: seniors = [], isLoading } = useQuery({
     queryKey: ["seniors", branch, year, availability, q],
@@ -127,7 +124,9 @@ function SeniorsPage() {
           >
             <option value="all">All Senior Years</option>
             {validSeniorYears.map((y) => (
-              <option key={y} value={y}>Year {y}</option>
+              <option key={y} value={y}>
+                Year {y}
+              </option>
             ))}
           </select>
           <select
@@ -151,15 +150,17 @@ function SeniorsPage() {
             </div>
             <p className="font-semibold text-lg">You've reached the top!</p>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              As a {currentYear === 4 ? "4th year" : `Year ${currentYear}`} student,
-              there are no seniors above you. Consider becoming a mentor yourself!
+              As a {currentYear === 4 ? "4th year" : `Year ${currentYear}`} student, there are no
+              seniors above you. Consider becoming a mentor yourself!
             </p>
           </div>
         </Card>
       ) : isLoading ? (
         <div className="text-center py-10 text-muted-foreground">Loading mentors...</div>
       ) : seniors.length === 0 ? (
-        <div className="text-center py-10 text-muted-foreground">No mentors found matching your filters.</div>
+        <div className="text-center py-10 text-muted-foreground">
+          No mentors found matching your filters.
+        </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {seniors.map((s: any, i: number) => (

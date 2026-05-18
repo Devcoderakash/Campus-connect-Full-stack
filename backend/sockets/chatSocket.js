@@ -77,7 +77,7 @@ module.exports = (io) => {
         // Mark all unread messages in this conversation as read
         await Message.updateMany(
           { senderId: otherId, receiverId: myId, isRead: false },
-          { $set: { isRead: true } }
+          { $set: { isRead: true } },
         );
         socket.emit("joinedChat", { room, otherUserId: otherId });
         console.log(`[Socket] ${socket.user.name} joined room ${room}`);

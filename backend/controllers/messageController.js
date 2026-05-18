@@ -74,9 +74,9 @@ const getConversations = async (req, res) => {
           // the isCurrentJunior flip-flop bug.
           let otherUser;
           if (juniorIdStr === currentUserId) {
-            otherUser = m.seniorId;   // current user is junior → other is senior
+            otherUser = m.seniorId; // current user is junior → other is senior
           } else if (seniorIdStr === currentUserId) {
-            otherUser = m.juniorId;   // current user is senior → other is junior
+            otherUser = m.juniorId; // current user is senior → other is junior
           } else {
             return null; // current user not in this mentorship — skip
           }
@@ -106,7 +106,7 @@ const getConversations = async (req, res) => {
             lastMessageAt: lastMsg?.createdAt ?? m.createdAt,
             unread,
           };
-        })
+        }),
     );
 
     const valid = conversations
@@ -148,4 +148,3 @@ const saveMessage = async (req, res) => {
 };
 
 module.exports = { getChatHistory, getConversations, saveMessage };
-

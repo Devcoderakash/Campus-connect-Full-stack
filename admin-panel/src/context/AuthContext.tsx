@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const { data } = await api.post("/auth/login", { email, password });
-    
+
     // Ensure the user is actually an admin!
     const userData = data.user || data;
     if (userData.role !== "Admin") {

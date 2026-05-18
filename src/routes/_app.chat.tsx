@@ -20,11 +20,15 @@ function ChatPage() {
   // Use a ref too so closures always have the latest value without re-subscribing
   const currentUserId = user?._id ?? null;
   const currentUserIdRef = useRef(currentUserId);
-  useEffect(() => { currentUserIdRef.current = currentUserId; }, [currentUserId]);
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId;
+  }, [currentUserId]);
 
   const [selected, setSelected] = useState<any>(null);
   const selectedRef = useRef<any>(null);
-  useEffect(() => { selectedRef.current = selected; }, [selected]);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   const [showList, setShowList] = useState(true);
   const [input, setInput] = useState("");
@@ -39,46 +43,50 @@ function ChatPage() {
   const queryClient = useQueryClient();
 
   // ── Stable message handler (uses refs so it never goes stale) ────────────
-  const handleReceive = useCallback((msg: any) => {
-    const myId = sid(currentUserIdRef.current);
-    const theirId = sid(selectedRef.current?._id);
-    const msgSender = sid(msg.senderId);
-    const msgReceiver = sid(msg.receiverId);
+  const handleReceive = useCallback(
+    (msg: any) => {
+      const myId = sid(currentUserIdRef.current);
+      const theirId = sid(selectedRef.current?._id);
+      const msgSender = sid(msg.senderId);
+      const msgReceiver = sid(msg.receiverId);
 
-    // Always refresh sidebar so unread counts/last message stay current,
-    // even when the message belongs to a different conversation.
-    queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // Always refresh sidebar so unread counts/last message stay current,
+      // even when the message belongs to a different conversation.
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
 
-    // Only add to active message list if it belongs to the open conversation
-    const relevant =
-      (msgSender === theirId && msgReceiver === myId) ||
-      (msgSender === myId && msgReceiver === theirId);
+      // Only add to active message list if it belongs to the open conversation
+      const relevant =
+        (msgSender === theirId && msgReceiver === myId) ||
+        (msgSender === myId && msgReceiver === theirId);
 
-    if (!relevant) return;
+      if (!relevant) return;
 
-    setMessages((prev) => {
-      // Already have this exact confirmed message — skip
-      if (prev.find((m) => sid(m._id) === sid(msg._id) && !sid(m._id).startsWith("optimistic_"))) {
-        return prev;
-      }
-      // Replace an optimistic message with the same text sent by me
-      if (msgSender === myId) {
-        const withoutOptimistic = prev.filter(
-          (m) => !sid(m._id).startsWith("optimistic_") || m.message !== msg.message
-        );
-        // If we removed an optimistic entry, the real message takes its place
-        if (withoutOptimistic.length < prev.length) {
-          return [...withoutOptimistic, msg];
+      setMessages((prev) => {
+        // Already have this exact confirmed message — skip
+        if (
+          prev.find((m) => sid(m._id) === sid(msg._id) && !sid(m._id).startsWith("optimistic_"))
+        ) {
+          return prev;
         }
-      }
-      return [...prev, msg];
-    });
-  }, [queryClient]); // queryClient is stable; we read user/selected from refs
+        // Replace an optimistic message with the same text sent by me
+        if (msgSender === myId) {
+          const withoutOptimistic = prev.filter(
+            (m) => !sid(m._id).startsWith("optimistic_") || m.message !== msg.message,
+          );
+          // If we removed an optimistic entry, the real message takes its place
+          if (withoutOptimistic.length < prev.length) {
+            return [...withoutOptimistic, msg];
+          }
+        }
+        return [...prev, msg];
+      });
+    },
+    [queryClient],
+  ); // queryClient is stable; we read user/selected from refs
 
   // ── Socket lifecycle ──────────────────────────────────────────────────────
   useEffect(() => {
-    const token =
-      typeof localStorage !== "undefined" ? localStorage.getItem("cc_token") : null;
+    const token = typeof localStorage !== "undefined" ? localStorage.getItem("cc_token") : null;
     if (!token) return;
 
     const newSocket = io(SOCKET_URL, {
@@ -118,9 +126,7 @@ function ChatPage() {
   const filteredConversations = useMemo(() => {
     const list = Array.isArray(conversations) ? conversations : [];
     if (!searchQ.trim()) return list;
-    return list.filter((c: any) =>
-      c.name?.toLowerCase().includes(searchQ.toLowerCase())
-    );
+    return list.filter((c: any) => c.name?.toLowerCase().includes(searchQ.toLowerCase()));
   }, [conversations, searchQ]);
 
   // ── When a conversation is selected ──────────────────────────────────────
@@ -208,7 +214,6 @@ function ChatPage() {
   return (
     <div className="max-w-7xl mx-auto h-[calc(100vh-8rem)]">
       <div className="glass rounded-3xl overflow-hidden h-full flex shadow-card">
-
         {/* ── SIDEBAR ── */}
         <div
           className={`${selected && !showList ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 border-r border-border flex-col`}
@@ -245,13 +250,20 @@ function ChatPage() {
                 return (
                   <button
                     key={c._id}
-                    onClick={() => { setSelected(c); setShowList(false); }}
+                    onClick={() => {
+                      setSelected(c);
+                      setShowList(false);
+                    }}
                     className={`w-full flex items-center gap-3 p-3 hover:bg-muted/50 transition-colors ${isSelected ? "bg-muted" : ""}`}
                   >
                     <div className="relative shrink-0">
                       <div className="h-12 w-12 rounded-full gradient-primary flex items-center justify-center font-semibold text-primary-foreground overflow-hidden">
                         {c.profileImage ? (
-                          <img src={c.profileImage} alt={c.name} className="w-full h-full object-cover" />
+                          <img
+                            src={c.profileImage}
+                            alt={c.name}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <User className="h-6 w-6" />
                         )}
@@ -293,12 +305,19 @@ function ChatPage() {
             <>
               {/* Header */}
               <div className="p-3 border-b border-border flex items-center gap-3">
-                <button onClick={() => setShowList(true)} className="md:hidden p-2 rounded-lg hover:bg-muted">
+                <button
+                  onClick={() => setShowList(true)}
+                  className="md:hidden p-2 rounded-lg hover:bg-muted"
+                >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
                 <div className="h-10 w-10 rounded-full gradient-primary flex items-center justify-center font-semibold text-primary-foreground text-sm overflow-hidden">
                   {selected.profileImage ? (
-                    <img src={selected.profileImage} alt={selected.name} className="w-full h-full object-cover" />
+                    <img
+                      src={selected.profileImage}
+                      alt={selected.name}
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <User className="h-5 w-5" />
                   )}
@@ -344,7 +363,11 @@ function ChatPage() {
                       {!isMine && (
                         <div className="h-8 w-8 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-xs shrink-0 overflow-hidden">
                           {selected.profileImage ? (
-                            <img src={selected.profileImage} alt="" className="w-full h-full object-cover" />
+                            <img
+                              src={selected.profileImage}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
                             <User className="h-4 w-4" />
                           )}
@@ -358,11 +381,11 @@ function ChatPage() {
                         } ${isOptimistic ? "opacity-70" : ""}`}
                       >
                         <p className="text-sm leading-relaxed">{m.message}</p>
-                        <p className={`text-[10px] mt-1 ${isMine ? "text-primary-foreground/70 text-right" : "text-muted-foreground"}`}>
+                        <p
+                          className={`text-[10px] mt-1 ${isMine ? "text-primary-foreground/70 text-right" : "text-muted-foreground"}`}
+                        >
                           {formatTime(m.createdAt)}
-                          {isMine && (
-                            <span className="ml-1">{isOptimistic ? "○" : "✓"}</span>
-                          )}
+                          {isMine && <span className="ml-1">{isOptimistic ? "○" : "✓"}</span>}
                         </p>
                       </div>
                     </motion.div>
@@ -374,7 +397,11 @@ function ChatPage() {
                   <div className="flex items-end gap-2 justify-start">
                     <div className="h-8 w-8 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-xs shrink-0 overflow-hidden">
                       {selected.profileImage ? (
-                        <img src={selected.profileImage} alt="" className="w-full h-full object-cover" />
+                        <img
+                          src={selected.profileImage}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         <User className="h-4 w-4" />
                       )}
@@ -425,7 +452,6 @@ function ChatPage() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

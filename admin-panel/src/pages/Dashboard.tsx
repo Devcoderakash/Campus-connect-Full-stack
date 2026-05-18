@@ -22,7 +22,9 @@ export function Dashboard() {
 
   const totalNotes = resources.filter((r) => r.resourceType === "Notes").length;
   const totalPYQs = resources.filter((r) => r.resourceType === "PYQ").length;
-  const totalPDFs = resources.filter((r) => ["Study Material", "Important PDF", "Syllabus"].includes(r.resourceType)).length;
+  const totalPDFs = resources.filter((r) =>
+    ["Study Material", "Important PDF", "Syllabus"].includes(r.resourceType),
+  ).length;
 
   const stats = [
     { label: "Total Notes", value: totalNotes, icon: FileText, trend: "+12%" },
@@ -36,10 +38,15 @@ export function Dashboard() {
       {/* Analytics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, i) => (
-          <div key={i} className="glass rounded-2xl p-6 shadow-card hover:-translate-y-1 transition-transform">
+          <div
+            key={i}
+            className="glass rounded-2xl p-6 shadow-card hover:-translate-y-1 transition-transform"
+          >
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                  {stat.label}
+                </p>
                 <h3 className="text-3xl font-display font-bold mt-2">
                   {loading ? "-" : stat.value}
                 </h3>
@@ -67,7 +74,10 @@ export function Dashboard() {
               <p className="text-muted-foreground text-sm">No recent activity found.</p>
             ) : (
               resources.slice(0, 5).map((r: any) => (
-                <div key={r._id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-muted/30 transition-colors">
+                <div
+                  key={r._id}
+                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-muted/30 transition-colors"
+                >
                   <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
                     <span className="text-xs font-bold text-muted-foreground">
                       {r.uploadedBy?.name?.charAt(0) || "U"}

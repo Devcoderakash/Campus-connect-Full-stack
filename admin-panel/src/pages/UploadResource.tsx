@@ -58,7 +58,7 @@ export function UploadResource() {
         unit: "All",
         resourceType: "Notes",
       });
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
@@ -77,7 +77,9 @@ export function UploadResource() {
           </div>
           <div>
             <h2 className="text-2xl font-display font-bold">Upload Resource</h2>
-            <p className="text-muted-foreground text-sm">Instantly sync materials to the student app</p>
+            <p className="text-muted-foreground text-sm">
+              Instantly sync materials to the student app
+            </p>
           </div>
         </div>
 
@@ -87,7 +89,7 @@ export function UploadResource() {
             <span>{error}</span>
           </div>
         )}
-        
+
         {success && (
           <div className="mb-6 p-4 rounded-xl bg-success/10 text-success text-sm font-medium flex items-start gap-2">
             <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -98,7 +100,9 @@ export function UploadResource() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-2 lg:col-span-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Title</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Title
+              </label>
               <input
                 type="text"
                 required
@@ -109,7 +113,9 @@ export function UploadResource() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Subject</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Subject
+              </label>
               <input
                 type="text"
                 required
@@ -121,53 +127,79 @@ export function UploadResource() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Branch</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Branch
+              </label>
               <select
                 value={formData.branch}
                 onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
                 className="w-full h-11 px-4 rounded-xl bg-muted border-2 border-transparent focus:border-primary outline-none transition-colors appearance-none"
               >
-                {branches.map(b => <option key={b} value={b}>{b}</option>)}
+                {branches.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Year</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Year
+              </label>
               <select
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
                 className="w-full h-11 px-4 rounded-xl bg-muted border-2 border-transparent focus:border-primary outline-none transition-colors appearance-none"
               >
-                {years.map(y => <option key={y} value={y}>Year {y}</option>)}
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    Year {y}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Semester</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Semester
+              </label>
               <select
                 value={formData.semester}
                 onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
                 className="w-full h-11 px-4 rounded-xl bg-muted border-2 border-transparent focus:border-primary outline-none transition-colors appearance-none"
               >
-                {semesters.map(s => <option key={s} value={s}>Semester {s}</option>)}
+                {semesters.map((s) => (
+                  <option key={s} value={s}>
+                    Semester {s}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Unit</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Unit
+              </label>
               <select
                 value={formData.unit}
                 onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
                 className="w-full h-11 px-4 rounded-xl bg-muted border-2 border-transparent focus:border-primary outline-none transition-colors appearance-none"
               >
-                {units.map(u => <option key={u} value={u}>{u}</option>)}
+                {units.map((u) => (
+                  <option key={u} value={u}>
+                    {u}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="space-y-2 lg:col-span-2">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Resource Type</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Resource Type
+              </label>
               <div className="flex flex-wrap gap-4">
-                {types.map(t => (
+                {types.map((t) => (
                   <label key={t} className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -183,7 +215,9 @@ export function UploadResource() {
             </div>
 
             <div className="space-y-2 lg:col-span-3">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Description</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Description
+              </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -193,7 +227,9 @@ export function UploadResource() {
             </div>
 
             <div className="space-y-2 lg:col-span-3">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">File</label>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                File
+              </label>
               <div className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center bg-muted/50 transition-colors hover:bg-muted relative">
                 <input
                   type="file"
@@ -205,7 +241,9 @@ export function UploadResource() {
                   <>
                     <File className="h-8 w-8 text-primary mb-2" />
                     <p className="text-sm font-medium text-primary">{file.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
                   </>
                 ) : (
                   <>

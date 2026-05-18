@@ -26,7 +26,9 @@ export function RequestMentorshipModal({
       setMessage("");
       // onClose is called by the parent's onSuccess handler
     } catch (err: any) {
-      setError(err?.response?.data?.message ?? err?.message ?? "Failed to send request. Please try again.");
+      setError(
+        err?.response?.data?.message ?? err?.message ?? "Failed to send request. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -53,7 +55,11 @@ export function RequestMentorshipModal({
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-xl">Request Mentorship</h3>
                 <button
-                  onClick={() => { onClose(); setError(""); setMessage(""); }}
+                  onClick={() => {
+                    onClose();
+                    setError("");
+                    setMessage("");
+                  }}
                   className="h-9 w-9 rounded-full hover:bg-muted flex items-center justify-center"
                 >
                   <X className="h-4 w-4" />

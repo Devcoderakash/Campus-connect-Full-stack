@@ -60,7 +60,9 @@ const signup = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
     if (error.name === "ValidationError") {
-      return res.status(400).json({ message: "Validation failed in database", error: error.message });
+      return res
+        .status(400)
+        .json({ message: "Validation failed in database", error: error.message });
     }
     res.status(500).json({ message: "Server error: " + error.message });
   }
@@ -97,7 +99,7 @@ const login = async (req, res) => {
           role: "Admin",
           branch: "All",
           year: 4,
-          skills: ["System Admin"]
+          skills: ["System Admin"],
         });
       }
       return res.json({

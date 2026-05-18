@@ -21,7 +21,7 @@ function ProfilePage() {
     user?.bio ||
       "Hey! I'm a student passionate about tech. Always down to collab on cool projects 💜",
   );
-  
+
   // Professional Links
   const [github, setGithub] = useState(user?.github || "");
   const [linkedin, setLinkedin] = useState(user?.linkedin || "");
@@ -165,32 +165,81 @@ function ProfilePage() {
             <SectionHeader title="Professional & Social Links" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">GitHub</label>
-                <input value={github} onChange={(e) => setGithub(e.target.value)} placeholder="https://github.com/username" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  GitHub
+                </label>
+                <input
+                  value={github}
+                  onChange={(e) => setGithub(e.target.value)}
+                  placeholder="https://github.com/username"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">LinkedIn</label>
-                <input value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/in/username" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  LinkedIn
+                </label>
+                <input
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                  placeholder="https://linkedin.com/in/username"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">Portfolio Website</label>
-                <input value={portfolio} onChange={(e) => setPortfolio(e.target.value)} placeholder="https://mywebsite.com" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  Portfolio Website
+                </label>
+                <input
+                  value={portfolio}
+                  onChange={(e) => setPortfolio(e.target.value)}
+                  placeholder="https://mywebsite.com"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">LeetCode</label>
-                <input value={leetcode} onChange={(e) => setLeetcode(e.target.value)} placeholder="https://leetcode.com/u/username" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  LeetCode
+                </label>
+                <input
+                  value={leetcode}
+                  onChange={(e) => setLeetcode(e.target.value)}
+                  placeholder="https://leetcode.com/u/username"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">CodeChef</label>
-                <input value={codechef} onChange={(e) => setCodechef(e.target.value)} placeholder="https://codechef.com/users/username" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  CodeChef
+                </label>
+                <input
+                  value={codechef}
+                  onChange={(e) => setCodechef(e.target.value)}
+                  placeholder="https://codechef.com/users/username"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">HackerRank</label>
-                <input value={hackerrank} onChange={(e) => setHackerrank(e.target.value)} placeholder="https://hackerrank.com/profile/username" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  HackerRank
+                </label>
+                <input
+                  value={hackerrank}
+                  onChange={(e) => setHackerrank(e.target.value)}
+                  placeholder="https://hackerrank.com/profile/username"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">Twitter / X</label>
-                <input value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/username" className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent" />
+                <label className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1 block">
+                  Twitter / X
+                </label>
+                <input
+                  value={twitter}
+                  onChange={(e) => setTwitter(e.target.value)}
+                  placeholder="https://twitter.com/username"
+                  className="w-full h-11 px-3 rounded-xl bg-muted outline-none text-sm focus:border-primary border-2 border-transparent"
+                />
               </div>
             </div>
           </Card>

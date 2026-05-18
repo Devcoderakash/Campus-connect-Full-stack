@@ -6,7 +6,17 @@ const stream = require("stream");
 
 const getResources = async (req, res) => {
   try {
-    const { subject, branch, semester, year, unit, type, keyword, page = 1, limit = 10 } = req.query;
+    const {
+      subject,
+      branch,
+      semester,
+      year,
+      unit,
+      type,
+      keyword,
+      page = 1,
+      limit = 10,
+    } = req.query;
 
     let query = {};
     if (subject) query.subject = { $regex: subject, $options: "i" };

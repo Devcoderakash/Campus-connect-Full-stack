@@ -12,5 +12,5 @@ const getEvents = async (req, res) => {
 };
 
 module.exports = {
-  getEvents
+  getEvents,
 };

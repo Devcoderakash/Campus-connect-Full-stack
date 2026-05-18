@@ -24,7 +24,18 @@ const updateProfile = async (req, res) => {
       user.bio = req.body.bio || user.bio;
       user.contact = req.body.contact || user.contact;
       user.skills = req.body.skills || user.skills;
-      const { name, bio, skills, github, linkedin, portfolio, leetcode, codechef, hackerrank, twitter } = req.body;
+      const {
+        name,
+        bio,
+        skills,
+        github,
+        linkedin,
+        portfolio,
+        leetcode,
+        codechef,
+        hackerrank,
+        twitter,
+      } = req.body;
       let profileImage = user.profileImage;
       if (req.body.branch) user.branch = req.body.branch;
       if (req.body.year) user.year = Number(req.body.year);
@@ -37,7 +48,8 @@ const updateProfile = async (req, res) => {
       if (twitter !== undefined) user.twitter = twitter;
       user.profileImage = req.body.profileImage || user.profileImage;
       if (req.body.visibility !== undefined) user.visibility = req.body.visibility;
-      if (req.body.isMentorAvailable !== undefined) user.isMentorAvailable = req.body.isMentorAvailable;
+      if (req.body.isMentorAvailable !== undefined)
+        user.isMentorAvailable = req.body.isMentorAvailable;
 
       if (req.body.password) {
         const bcrypt = require("bcryptjs");
@@ -97,25 +109,25 @@ const searchUsers = async (req, res) => {
 const getSeniors = async (req, res) => {
   try {
     const { branch, skill, keyword, year, isMentorAvailable } = req.query;
-    
+
     // Core hierarchy logic: Only show users strictly senior (higher year) than the current user.
     // E.g., if user is Year 2, show Year 3 and 4.
     const currentYear = req.user.year || 1;
-    let query = { 
+    let query = {
       year: { $gt: currentYear },
-      visibility: true 
+      visibility: true,
     };
 
     if (branch) query.branch = branch;
     if (skill) query.skills = { $in: [skill] };
     if (year) query.year = Number(year); // If they explicitly filter by a specific valid senior year
-    if (isMentorAvailable === 'true') query.isMentorAvailable = true;
+    if (isMentorAvailable === "true") query.isMentorAvailable = true;
 
     if (keyword) {
       query.$or = [
         { name: { $regex: keyword, $options: "i" } },
         { branch: { $regex: keyword, $options: "i" } },
-        { skills: { $regex: keyword, $options: "i" } }
+        { skills: { $regex: keyword, $options: "i" } },
       ];
     }
 
@@ -132,14 +144,14 @@ const getProfileStats = async (req, res) => {
 
     // 1. Resources & Uploads Count
     const resourcesCount = await Resource.countDocuments({ uploadedBy: userId });
-    
+
     // Total uploads is equivalent to resourcesCount for now, unless we distinguish resource types
     const uploadsCount = resourcesCount;
 
     // 2. Connections Count (Accepted mentorships where user is senior or junior)
     const connectionsCount = await Mentorship.countDocuments({
       $or: [{ seniorId: userId }, { juniorId: userId }],
-      status: "Accepted"
+      status: "Accepted",
     });
 
     // 3. Bookmarks Count (bookmarked mentors)
@@ -152,7 +164,7 @@ const getProfileStats = async (req, res) => {
       connectionsCount,
       bookmarksCount,
       activeChats: user?.mentorStats?.activeChats || 0,
-      totalRequests: user?.mentorStats?.totalRequests || 0
+      totalRequests: user?.mentorStats?.totalRequests || 0,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

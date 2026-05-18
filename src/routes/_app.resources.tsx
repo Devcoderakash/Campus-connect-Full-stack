@@ -130,7 +130,9 @@ function Resources() {
             className="h-11 px-4 rounded-xl bg-muted outline-none border-2 border-transparent focus:border-primary"
           >
             {branches.map((b) => (
-              <option key={b} value={b}>{b}</option>
+              <option key={b} value={b}>
+                {b}
+              </option>
             ))}
           </select>
           <select
@@ -140,7 +142,9 @@ function Resources() {
           >
             <option value="all">All years</option>
             {years.map((y) => (
-              <option key={y} value={y}>Year {y}</option>
+              <option key={y} value={y}>
+                Year {y}
+              </option>
             ))}
           </select>
           <select
@@ -150,7 +154,9 @@ function Resources() {
           >
             <option value="all">All semesters</option>
             {semesters.map((s) => (
-              <option key={s} value={s}>Sem {s}</option>
+              <option key={s} value={s}>
+                Sem {s}
+              </option>
             ))}
           </select>
           <select
@@ -159,7 +165,9 @@ function Resources() {
             className="h-11 px-4 rounded-xl bg-muted outline-none border-2 border-transparent focus:border-primary"
           >
             {units.map((u) => (
-              <option key={u} value={u}>{u}</option>
+              <option key={u} value={u}>
+                {u}
+              </option>
             ))}
           </select>
           <select
@@ -168,7 +176,9 @@ function Resources() {
             className="col-span-2 md:col-span-6 lg:col-span-2 h-11 px-4 rounded-xl bg-muted outline-none border-2 border-transparent focus:border-primary"
           >
             {types.map((t) => (
-              <option key={t} value={t}>{t === "All" ? "All Resource Types" : t}</option>
+              <option key={t} value={t}>
+                {t === "All" ? "All Resource Types" : t}
+              </option>
             ))}
           </select>
         </div>
@@ -219,7 +229,9 @@ function Resources() {
                 </p>
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   <Badge variant="primary">{it.branch}</Badge>
-                  <Badge>Y{it.year}S{it.semester}</Badge>
+                  <Badge>
+                    Y{it.year}S{it.semester}
+                  </Badge>
                   {it.unit !== "All" && <Badge variant="default">{it.unit}</Badge>}
                   <Badge variant="success">{it.resourceType}</Badge>
                 </div>
@@ -322,11 +334,13 @@ function Resources() {
                       onChange={(e) => setUpType(e.target.value as any)}
                       className="h-11 px-4 rounded-xl bg-muted outline-none border-2 border-transparent focus:border-primary"
                     >
-                      {types.filter(t => t !== "All").map((t) => (
-                        <option key={t} value={t}>
-                          {t}
-                        </option>
-                      ))}
+                      {types
+                        .filter((t) => t !== "All")
+                        .map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
                     </select>
                   </div>
                   <label className="border-2 border-dashed border-border rounded-2xl p-8 text-center hover:border-primary transition-colors cursor-pointer block">

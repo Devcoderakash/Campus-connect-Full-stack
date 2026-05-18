@@ -9,13 +9,15 @@ const requestMentorship = async (req, res) => {
     const senior = await User.findById(seniorId);
     const currentUserYear = req.user.year || 1;
     const seniorYear = senior?.year || 1;
-    
+
     if (!senior) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     if (seniorYear <= currentUserYear) {
-      return res.status(403).json({ message: "Can only request mentorship from someone in a higher year" });
+      return res
+        .status(403)
+        .json({ message: "Can only request mentorship from someone in a higher year" });
     }
 
     const existingRequest = await Mentorship.findOne({
@@ -130,13 +132,13 @@ const getSeniors = async (req, res) => {
 
     // Enforce hierarchical mentorship: users can only see people strictly above their year
     const currentUserYear = req.user.year || 1;
-    let query = { 
+    let query = {
       year: { $gt: currentUserYear },
-      visibility: true 
+      visibility: true,
     };
 
     if (branch && branch !== "All") query.branch = branch;
-    
+
     // If client specifically selected a year, intersect it with our hierarchy logic
     if (year && year !== "all") {
       const requestedYear = Number(year);
@@ -147,18 +149,18 @@ const getSeniors = async (req, res) => {
         return res.json([]);
       }
     }
-    
+
     if (availability !== undefined && availability !== "all") {
       query.isMentorAvailable = availability === "true";
     }
-    
+
     if (skills) query.skills = { $in: skills.split(",") };
-    
+
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
         { bio: { $regex: search, $options: "i" } },
-        { skills: { $regex: search, $options: "i" } }
+        { skills: { $regex: search, $options: "i" } },
       ];
     }
 

@@ -129,7 +129,11 @@ function Dashboard() {
                   <Card className="flex flex-col sm:flex-row gap-4 hover:shadow-glow transition-shadow overflow-hidden p-0 sm:pr-4">
                     {event.bannerImage ? (
                       <div className="h-40 sm:h-auto sm:w-32 bg-muted shrink-0">
-                        <img src={event.bannerImage} alt={event.title} className="h-full w-full object-cover" />
+                        <img
+                          src={event.bannerImage}
+                          alt={event.title}
+                          className="h-full w-full object-cover"
+                        />
                       </div>
                     ) : (
                       <div className="hidden sm:flex h-24 w-24 rounded-2xl bg-primary/10 items-center justify-center shrink-0 ml-4 mt-4 sm:my-auto">
@@ -144,25 +148,57 @@ function Dashboard() {
                         </span>
                       </div>
                       <p className="font-bold text-lg leading-tight mb-1 truncate">{event.title}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-1 mb-2">{event.description}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
+                        {event.description}
+                      </p>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
                         <Users className="h-3.5 w-3.5" />
-                        <span>Organized by <span className="font-semibold text-foreground">{event.organizedBy}</span></span>
+                        <span>
+                          Organized by{" "}
+                          <span className="font-semibold text-foreground">{event.organizedBy}</span>
+                        </span>
                       </div>
                       {(event.registrationLink || event.websiteLink || event.moreDetailsLink) && (
                         <div className="flex flex-wrap gap-2 mt-auto">
                           {event.registrationLink && (
-                            <a href={event.registrationLink.startsWith('http') ? event.registrationLink : `https://${event.registrationLink}`} target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-lg gradient-primary text-primary-foreground text-xs font-semibold shadow-glow hover:-translate-y-0.5 transition-transform">
+                            <a
+                              href={
+                                event.registrationLink.startsWith("http")
+                                  ? event.registrationLink
+                                  : `https://${event.registrationLink}`
+                              }
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-3 py-1.5 rounded-lg gradient-primary text-primary-foreground text-xs font-semibold shadow-glow hover:-translate-y-0.5 transition-transform"
+                            >
                               Register
                             </a>
                           )}
                           {event.websiteLink && (
-                            <a href={event.websiteLink.startsWith('http') ? event.websiteLink : `https://${event.websiteLink}`} target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-lg bg-muted text-foreground hover:bg-muted-foreground/20 text-xs font-semibold transition-colors">
+                            <a
+                              href={
+                                event.websiteLink.startsWith("http")
+                                  ? event.websiteLink
+                                  : `https://${event.websiteLink}`
+                              }
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-3 py-1.5 rounded-lg bg-muted text-foreground hover:bg-muted-foreground/20 text-xs font-semibold transition-colors"
+                            >
                               Website
                             </a>
                           )}
                           {event.moreDetailsLink && (
-                            <a href={event.moreDetailsLink.startsWith('http') ? event.moreDetailsLink : `https://${event.moreDetailsLink}`} target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-lg bg-muted text-foreground hover:bg-muted-foreground/20 text-xs font-semibold transition-colors">
+                            <a
+                              href={
+                                event.moreDetailsLink.startsWith("http")
+                                  ? event.moreDetailsLink
+                                  : `https://${event.moreDetailsLink}`
+                              }
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-3 py-1.5 rounded-lg bg-muted text-foreground hover:bg-muted-foreground/20 text-xs font-semibold transition-colors"
+                            >
                               More Details
                             </a>
                           )}

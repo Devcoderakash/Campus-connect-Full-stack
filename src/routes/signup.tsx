@@ -35,23 +35,32 @@ function Signup() {
       const payload = {
         ...formData,
         role,
-        skills: role === "Senior" ? formData.skills.split(",").map((s) => s.trim()).filter(Boolean) : [],
+        skills:
+          role === "Senior"
+            ? formData.skills
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : [],
       };
-      
+
       const res = await api.post<any>("/auth/signup", payload);
-      
+
       // Directly log the user in with the returned token and user data to avoid a second API call
       if (res.token) {
         localStorage.setItem("cc_token", res.token);
-        localStorage.setItem("cc_user", JSON.stringify({
-          _id: res._id,
-          name: res.name,
-          email: res.email,
-          role: res.role,
-          branch: formData.branch,
-          year: formData.year,
-          skills: payload.skills,
-        }));
+        localStorage.setItem(
+          "cc_user",
+          JSON.stringify({
+            _id: res._id,
+            name: res.name,
+            email: res.email,
+            role: res.role,
+            branch: formData.branch,
+            year: formData.year,
+            skills: payload.skills,
+          }),
+        );
         // We trigger a reload to let the AuthContext pick up the new storage natively
         window.location.href = "/dashboard";
       } else {

@@ -17,7 +17,7 @@ const {
   toggleMentorStatus,
   getSeniorAnalytics,
   createEvent,
-  deleteEvent
+  deleteEvent,
 } = require("../controllers/adminController");
 const { protect, admin } = require("../middleware/authMiddleware");
 

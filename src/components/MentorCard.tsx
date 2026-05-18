@@ -70,37 +70,94 @@ export function MentorCard({
           </p>
           <div className="flex flex-wrap gap-2 mb-4">
             {senior.github && (
-              <a href={senior.github.startsWith('http') ? senior.github : `https://${senior.github}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={senior.github.startsWith("http") ? senior.github : `https://${senior.github}`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 GitHub
               </a>
             )}
             {senior.linkedin && (
-              <a href={senior.linkedin.startsWith('http') ? senior.linkedin : `https://${senior.linkedin}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={
+                  senior.linkedin.startsWith("http")
+                    ? senior.linkedin
+                    : `https://${senior.linkedin}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 LinkedIn
               </a>
             )}
             {senior.portfolio && (
-              <a href={senior.portfolio.startsWith('http') ? senior.portfolio : `https://${senior.portfolio}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={
+                  senior.portfolio.startsWith("http")
+                    ? senior.portfolio
+                    : `https://${senior.portfolio}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 Portfolio
               </a>
             )}
             {senior.leetcode && (
-              <a href={senior.leetcode.startsWith('http') ? senior.leetcode : `https://${senior.leetcode}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={
+                  senior.leetcode.startsWith("http")
+                    ? senior.leetcode
+                    : `https://${senior.leetcode}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 LeetCode
               </a>
             )}
             {senior.codechef && (
-              <a href={senior.codechef.startsWith('http') ? senior.codechef : `https://${senior.codechef}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={
+                  senior.codechef.startsWith("http")
+                    ? senior.codechef
+                    : `https://${senior.codechef}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 CodeChef
               </a>
             )}
             {senior.hackerrank && (
-              <a href={senior.hackerrank.startsWith('http') ? senior.hackerrank : `https://${senior.hackerrank}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={
+                  senior.hackerrank.startsWith("http")
+                    ? senior.hackerrank
+                    : `https://${senior.hackerrank}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 HackerRank
               </a>
             )}
             {senior.twitter && (
-              <a href={senior.twitter.startsWith('http') ? senior.twitter : `https://${senior.twitter}`} target="_blank" rel="noreferrer" className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider">
+              <a
+                href={
+                  senior.twitter.startsWith("http") ? senior.twitter : `https://${senior.twitter}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="px-2 py-1 rounded-md bg-muted hover:bg-primary/20 text-[10px] font-semibold text-primary transition-colors uppercase tracking-wider"
+              >
                 Twitter
               </a>
             )}

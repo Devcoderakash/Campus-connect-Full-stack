@@ -16,7 +16,7 @@ export function Events() {
     bannerImage: "",
     registrationLink: "",
     websiteLink: "",
-    moreDetailsLink: ""
+    moreDetailsLink: "",
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -53,7 +53,7 @@ export function Events() {
         bannerImage: "",
         registrationLink: "",
         websiteLink: "",
-        moreDetailsLink: ""
+        moreDetailsLink: "",
       });
       fetchEvents();
     } catch (error: any) {
@@ -94,7 +94,9 @@ export function Events() {
         <div className="glass rounded-3xl p-12 text-center flex flex-col items-center">
           <CalendarDays className="h-16 w-16 text-muted-foreground mb-4 opacity-50" />
           <h3 className="text-xl font-bold mb-2">No Active Events</h3>
-          <p className="text-muted-foreground mb-6">Create an event to notify students on their dashboard.</p>
+          <p className="text-muted-foreground mb-6">
+            Create an event to notify students on their dashboard.
+          </p>
           <button
             onClick={() => setIsModalOpen(true)}
             className="h-10 px-6 rounded-xl gradient-primary text-primary-foreground font-semibold shadow-glow"
@@ -105,10 +107,17 @@ export function Events() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <div key={event._id} className="glass rounded-3xl overflow-hidden group hover:-translate-y-1 transition-all hover:shadow-glow">
+            <div
+              key={event._id}
+              className="glass rounded-3xl overflow-hidden group hover:-translate-y-1 transition-all hover:shadow-glow"
+            >
               {event.bannerImage && (
                 <div className="h-32 w-full bg-muted">
-                  <img src={event.bannerImage} alt={event.title} className="h-full w-full object-cover" />
+                  <img
+                    src={event.bannerImage}
+                    alt={event.title}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
               )}
               <div className="p-5">
@@ -116,17 +125,19 @@ export function Events() {
                   <span className="text-xs font-semibold px-2 py-1 bg-primary/10 text-primary rounded-md inline-block">
                     {event.eventType}
                   </span>
-                  <button 
+                  <button
                     onClick={() => handleDelete(event._id)}
                     className="h-8 w-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-white"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                
+
                 <h3 className="font-bold text-lg mb-2 leading-tight">{event.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{event.description}</p>
-                
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                  {event.description}
+                </p>
+
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-primary" />
@@ -152,10 +163,12 @@ export function Events() {
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="glass bg-card rounded-3xl p-6 w-full max-w-lg shadow-xl relative">
             <h3 className="text-xl font-bold font-display mb-4">Create New Event</h3>
-            
+
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="text-sm font-semibold text-muted-foreground mb-1 block">Event Title</label>
+                <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                  Event Title
+                </label>
                 <input
                   required
                   type="text"
@@ -165,9 +178,11 @@ export function Events() {
                   placeholder="e.g. Hackathon 2026"
                 />
               </div>
-              
+
               <div>
-                <label className="text-sm font-semibold text-muted-foreground mb-1 block">Description</label>
+                <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                  Description
+                </label>
                 <textarea
                   required
                   value={formData.description}
@@ -179,7 +194,9 @@ export function Events() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">Date</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    Date
+                  </label>
                   <input
                     required
                     type="date"
@@ -189,7 +206,9 @@ export function Events() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">Time</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    Time
+                  </label>
                   <input
                     required
                     type="time"
@@ -202,7 +221,9 @@ export function Events() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">Event Type</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    Event Type
+                  </label>
                   <select
                     value={formData.eventType}
                     onChange={(e) => setFormData({ ...formData, eventType: e.target.value })}
@@ -218,7 +239,9 @@ export function Events() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">Organized By</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    Organized By
+                  </label>
                   <input
                     required
                     type="text"
@@ -231,7 +254,9 @@ export function Events() {
               </div>
 
               <div>
-                <label className="text-sm font-semibold text-muted-foreground mb-1 block">Banner Image URL (Optional)</label>
+                <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                  Banner Image URL (Optional)
+                </label>
                 <input
                   type="url"
                   value={formData.bannerImage}
@@ -243,7 +268,9 @@ export function Events() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">Registration Link (Optional)</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    Registration Link (Optional)
+                  </label>
                   <input
                     type="url"
                     value={formData.registrationLink}
@@ -253,7 +280,9 @@ export function Events() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">Website (Optional)</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    Website (Optional)
+                  </label>
                   <input
                     type="url"
                     value={formData.websiteLink}
@@ -263,7 +292,9 @@ export function Events() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">More Details (Optional)</label>
+                  <label className="text-sm font-semibold text-muted-foreground mb-1 block">
+                    More Details (Optional)
+                  </label>
                   <input
                     type="url"
                     value={formData.moreDetailsLink}
