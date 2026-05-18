@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Send, ArrowLeft, User } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, SOCKET_URL } from "@/lib/api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 import { io, Socket } from "socket.io-client";
@@ -81,7 +81,7 @@ function ChatPage() {
       typeof localStorage !== "undefined" ? localStorage.getItem("cc_token") : null;
     if (!token) return;
 
-    const newSocket = io("http://localhost:5002", {
+    const newSocket = io(SOCKET_URL, {
       auth: { token },
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

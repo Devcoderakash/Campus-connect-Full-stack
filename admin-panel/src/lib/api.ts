@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
+
 export const api = axios.create({
-  baseURL: "http://localhost:5002/api", // using shared backend
+  baseURL: `${SOCKET_URL}/api`, // using shared backend
 });
 
 api.interceptors.request.use((config) => {

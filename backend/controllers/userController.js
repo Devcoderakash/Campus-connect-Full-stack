@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Resource = require("../models/Resource");
-const MentorshipRequest = require("../models/MentorshipRequest");
+const Mentorship = require("../models/Mentorship");
 
 const getProfile = async (req, res) => {
   try {
@@ -137,7 +137,7 @@ const getProfileStats = async (req, res) => {
     const uploadsCount = resourcesCount;
 
     // 2. Connections Count (Accepted mentorships where user is senior or junior)
-    const connectionsCount = await MentorshipRequest.countDocuments({
+    const connectionsCount = await Mentorship.countDocuments({
       $or: [{ seniorId: userId }, { juniorId: userId }],
       status: "Accepted"
     });

@@ -11,7 +11,8 @@
  * fetch is available in both Bun and the browser natively.
  */
 
-const BASE_URL = "http://localhost:5002/api";
+export const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
+export const BASE_URL = `${SOCKET_URL}/api`;
 
 // ── Token helpers ──────────────────────────────────────────────────────────
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Bell, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { api } from "@/lib/api";
+import { api, SOCKET_URL } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { io, Socket } from "socket.io-client";
 import { NotificationItem } from "./NotificationItem";
@@ -21,7 +21,7 @@ export function NotificationBell() {
     const token = typeof localStorage !== "undefined" ? localStorage.getItem("cc_token") : null;
     if (!token) return;
 
-    const newSocket = io("http://localhost:5002", {
+    const newSocket = io(SOCKET_URL, {
       auth: { token },
     });
 
