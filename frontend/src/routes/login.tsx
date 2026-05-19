@@ -89,8 +89,24 @@ function Login() {
         setIsGoogleLoading(false);
       }
     },
-    onError: () => {
-      setGoogleError("Google sign-in was cancelled or blocked. Please try again.");
+    onError: (errorResponse) => {
+      console.error("[Google OAuth Error]", errorResponse);
+      const errName = errorResponse?.error || "unknown";
+      if (errName === "popup_closed_by_user") {
+        setGoogleError("Google sign-in was closed before completion.");
+      } else if (errName === "origin_mismatch") {
+        setGoogleError("Origin Mismatch: Make sure 'http://localhost:5173' is registered in your Google Cloud Console under 'Authorized JavaScript Origins'.");
+      } else {
+        setGoogleError(`Google sign-in failed: ${errorResponse?.error_description || errName}. Please try again.`);
+      }
+    },
+    onNonOAuthError: (nonOAuthError) => {
+      console.error("[Google Non-OAuth Error]", nonOAuthError);
+      if (nonOAuthError?.type === "popup_blocked_by_browser") {
+        setGoogleError("Popup Blocked: Please allow popups for this site in your browser to complete Google Sign-In.");
+      } else {
+        setGoogleError(`Google sign-in initialization failed: ${nonOAuthError?.type || "unknown error"}`);
+      }
     },
   });
 

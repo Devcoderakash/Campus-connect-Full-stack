@@ -12,8 +12,10 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "@/context/AuthContext";
 import appCss from "../styles.css?url";
 
-// ── Google Client ID ─────────────────────────────────────────────────────
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "670027400432-lsp93o7f9jlplip3d5pb3p9kagmij4kj.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
+if (!GOOGLE_CLIENT_ID && typeof window !== "undefined") {
+  console.warn("⚠️ Warning: VITE_GOOGLE_CLIENT_ID environment variable is missing. Google OAuth will fail to initialize. Please configure it in your frontend/.env file.");
+}
 
 function NotFoundComponent() {
   return (
