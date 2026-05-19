@@ -6,6 +6,7 @@ import { Card, SectionHeader, Badge } from "@/components/ui-kit";
 import { branches, semesters } from "@/lib/constants";
 import { api } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/context/AuthContext";
 
 const years = [1, 2, 3, 4];
 const units = ["All", "Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"];
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/_app/resources")({
 });
 
 function Resources() {
+  const { user } = useAuth();
   const [branch, setBranch] = useState("All");
   const [sem, setSem] = useState<number | "all">("all");
   const [year, setYear] = useState<number | "all">("all");
@@ -104,12 +106,14 @@ function Resources() {
             Notes, PYQs, assignments and study material from across campus.
           </p>
         </div>
-        <button
-          onClick={() => setUploadOpen(true)}
-          className="inline-flex h-11 px-5 items-center gap-2 rounded-xl gradient-primary text-primary-foreground font-semibold shadow-glow hover:scale-105 transition-transform"
-        >
-          <Upload className="h-4 w-4" /> Upload
-        </button>
+        {(user?.role === "Admin" || (user?.year && user.year >= 2)) && (
+          <button
+            onClick={() => setUploadOpen(true)}
+            className="inline-flex h-11 px-5 items-center gap-2 rounded-xl gradient-primary text-primary-foreground font-semibold shadow-glow hover:scale-105 transition-transform"
+          >
+            <Upload className="h-4 w-4" /> Upload
+          </button>
+        )}
       </div>
 
       {/* filters */}
