@@ -18,6 +18,8 @@ const {
   getSeniorAnalytics,
   createEvent,
   deleteEvent,
+  getPendingSeniors,
+  verifySenior,
 } = require("../controllers/adminController");
 const { protect, admin } = require("../middleware/authMiddleware");
 
@@ -44,6 +46,10 @@ router.route("/senior-analytics").get(getSeniorAnalytics);
 router.route("/seniors/:id").get(getSeniorById);
 router.route("/senior/:id/block").patch(toggleSeniorBlock);
 router.route("/senior/:id/mentor-status").patch(toggleMentorStatus);
+
+// Senior Verification Request Routes
+router.route("/pending-seniors").get(getPendingSeniors);
+router.route("/seniors/:id/verify").put(verifySenior);
 
 // Event Management Routes
 router.route("/events").post(createEvent);

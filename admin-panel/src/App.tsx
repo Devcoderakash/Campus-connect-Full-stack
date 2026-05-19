@@ -5,6 +5,7 @@ import { UploadResource } from "./pages/UploadResource";
 import { Resources } from "./pages/Resources";
 import { Seniors } from "./pages/Seniors";
 import { Events } from "./pages/Events";
+import { VerificationRequests } from "./pages/VerificationRequests";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         {/* Temporary Auth Bypass for Development */}
         <Route element={<AdminLayout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/verification" element={<VerificationRequests />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/seniors" element={<Seniors />} />
           <Route path="/events" element={<Events />} />

@@ -31,14 +31,16 @@ const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const lowerRole = (role || "junior").toLowerCase();
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       branch,
       year,
-      role: role || "Junior",
-      skills: role === "Senior" ? skills : [],
+      role: lowerRole,
+      verificationStatus: lowerRole === "junior" ? "none" : "pending",
+      skills: ["senior", "pending_senior"].includes(lowerRole) ? skills : [],
     });
 
     if (user) {
@@ -50,6 +52,13 @@ const signup = async (req, res) => {
         branch: user.branch,
         year: user.year,
         skills: user.skills,
+        verificationStatus: user.verificationStatus,
+        collegeIdUrl: user.collegeIdUrl,
+        verifiedBadge: user.verifiedBadge,
+        bio: user.bio || "",
+        github: user.github || "",
+        linkedin: user.linkedin || "",
+        portfolio: user.portfolio || "",
         token: generateToken(user._id, user.role),
       });
     } else {
@@ -126,6 +135,14 @@ const login = async (req, res) => {
         branch: user.branch,
         year: user.year,
         skills: user.skills,
+        verificationStatus: user.verificationStatus,
+        collegeIdUrl: user.collegeIdUrl,
+        verifiedBadge: user.verifiedBadge,
+        profileImage: user.profileImage,
+        bio: user.bio || "",
+        github: user.github || "",
+        linkedin: user.linkedin || "",
+        portfolio: user.portfolio || "",
         token: generateToken(user._id, user.role),
       });
     } else {

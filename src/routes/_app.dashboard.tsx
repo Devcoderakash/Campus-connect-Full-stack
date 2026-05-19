@@ -9,6 +9,8 @@ import {
   ArrowUpRight,
   Sparkles,
   Calendar,
+  X,
+  ShieldAlert,
 } from "lucide-react";
 import { Card, SectionHeader, Badge } from "@/components/ui-kit";
 import { useAuth } from "@/context/AuthContext";
@@ -56,7 +58,46 @@ function Dashboard() {
   const updates = events.slice(0, 3);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-6">
+      {/* Verification Alerts */}
+      {user?.verificationStatus === "pending" && (
+        <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="h-6 w-6 shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-sm">Senior Verification Request Pending</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                We've received your College ID Card upload and our admin team is reviewing it. Once verified, you will unlock full mentor tools, appear on senior lists, and be able to receive junior requests!
+              </p>
+            </div>
+          </div>
+          <span className="text-xs bg-amber-500/20 px-3 py-1 rounded-full font-bold self-start md:self-center shrink-0">In Review</span>
+        </div>
+      )}
+
+      {user?.verificationStatus === "rejected" && (
+        <div className="p-5 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <X className="h-6 w-6 shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-sm">Senior Verification Request Rejected</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Unfortunately, your senior verification request was rejected. Reason: <span className="font-medium text-foreground">{user?.rejectionReason || "No details provided."}</span>
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                You can submit a new verification request by updating your profile.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/profile"
+            className="text-xs font-bold bg-destructive/20 text-destructive hover:bg-destructive/30 px-3 py-1.5 rounded-full self-start md:self-center shrink-0 transition-colors"
+          >
+            Re-submit Request
+          </Link>
+        </div>
+      )}
+
       {/* welcome */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}

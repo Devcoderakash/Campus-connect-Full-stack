@@ -21,13 +21,13 @@ const updateProfile = async (req, res) => {
 
     if (user) {
       user.name = req.body.name || user.name;
-      user.bio = req.body.bio || user.bio;
-      user.contact = req.body.contact || user.contact;
+      user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
+      user.contact = req.body.contact !== undefined ? req.body.contact : user.contact;
       user.skills = req.body.skills || user.skills;
+
       const {
-        name,
-        bio,
-        skills,
+        branch,
+        year,
         github,
         linkedin,
         portfolio,
@@ -35,10 +35,54 @@ const updateProfile = async (req, res) => {
         codechef,
         hackerrank,
         twitter,
+        profileImage,
+        collegeIdUrl,
+        visibility,
+        isMentorAvailable,
       } = req.body;
-      let profileImage = user.profileImage;
-      if (req.body.branch) user.branch = req.body.branch;
-      if (req.body.year) user.year = Number(req.body.year);
+
+      if (branch) user.branch = branch;
+      
+      if (year !== undefined) {
+        const parsedYear = Number(year);
+        user.year = parsedYear;
+        if (parsedYear === 1) {
+          user.role = "junior";
+          user.verificationStatus = "none";
+          user.verifiedBadge = false;
+        } else if ([2, 3, 4].includes(parsedYear)) {
+          // Keep as senior if already approved, otherwise assign pending_senior
+          if (user.role !== "senior" && user.role !== "Senior" && user.role !== "Admin") {
+            user.role = "pending_senior";
+            user.verificationStatus = "pending";
+          }
+        }
+      }
+
+      if (collegeIdUrl !== undefined) {
+        user.collegeIdUrl = collegeIdUrl;
+
+        // Auto-extract Google Drive details if it's a Drive URL
+        if (collegeIdUrl && collegeIdUrl.includes("drive.google.com")) {
+          let driveFileId = null;
+          const dMatch = collegeIdUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+          if (dMatch) driveFileId = dMatch[1];
+          const idMatch = collegeIdUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+          if (idMatch) driveFileId = idMatch[1];
+
+          if (driveFileId) {
+            user.collegeIdDriveFileId = driveFileId;
+            user.collegeIdPreviewUrl = `https://drive.google.com/file/d/${driveFileId}/preview`;
+            user.collegeIdDownloadUrl = `https://drive.google.com/uc?id=${driveFileId}`;
+            user.collegeIdUrl = user.collegeIdPreviewUrl; // Standardize
+
+            if (user.verificationStatus === "pending") {
+              user.verificationSubmittedAt = new Date();
+            }
+          }
+        }
+      }
+
       if (github !== undefined) user.github = github;
       if (linkedin !== undefined) user.linkedin = linkedin;
       if (portfolio !== undefined) user.portfolio = portfolio;
@@ -46,10 +90,9 @@ const updateProfile = async (req, res) => {
       if (codechef !== undefined) user.codechef = codechef;
       if (hackerrank !== undefined) user.hackerrank = hackerrank;
       if (twitter !== undefined) user.twitter = twitter;
-      user.profileImage = req.body.profileImage || user.profileImage;
-      if (req.body.visibility !== undefined) user.visibility = req.body.visibility;
-      if (req.body.isMentorAvailable !== undefined)
-        user.isMentorAvailable = req.body.isMentorAvailable;
+      if (profileImage !== undefined) user.profileImage = profileImage;
+      if (visibility !== undefined) user.visibility = visibility;
+      if (isMentorAvailable !== undefined) user.isMentorAvailable = isMentorAvailable;
 
       if (req.body.password) {
         const bcrypt = require("bcryptjs");
@@ -64,6 +107,14 @@ const updateProfile = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
+        verificationStatus: updatedUser.verificationStatus,
+        collegeIdUrl: updatedUser.collegeIdUrl,
+        collegeIdDriveFileId: updatedUser.collegeIdDriveFileId,
+        collegeIdPreviewUrl: updatedUser.collegeIdPreviewUrl,
+        collegeIdDownloadUrl: updatedUser.collegeIdDownloadUrl,
+        verificationSubmittedAt: updatedUser.verificationSubmittedAt,
+        verificationReviewedAt: updatedUser.verificationReviewedAt,
+        verifiedBadge: updatedUser.verifiedBadge,
         bio: updatedUser.bio,
         contact: updatedUser.contact,
         skills: updatedUser.skills,

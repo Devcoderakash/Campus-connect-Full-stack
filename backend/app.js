@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const path = require("path");
 
 const app = express();
 
@@ -28,6 +29,9 @@ app.use("/api", limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve local uploads statically
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Basic Route for testing
 app.get("/", (req, res) => {
   res.send("Campus Connect API is running");
@@ -41,7 +45,7 @@ app.use("/api/updates", require("./routes/updateRoutes"));
 app.use("/api/mentorship", require("./routes/mentorshipRoutes"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
-app.use("/api/messages", require("./routes/messageRoutes"));
+app.use("/api/chat", require("./routes/chatRoutes"));
 app.use("/api/events", require("./routes/eventRoutes"));
 
 // Error handling middleware

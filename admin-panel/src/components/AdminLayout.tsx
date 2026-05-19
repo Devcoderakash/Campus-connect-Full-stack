@@ -16,6 +16,7 @@ import { cn } from "../lib/utils";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Overview", path: "/" },
+  { icon: Shield, label: "Senior Verification", path: "/verification" },
   { icon: Users, label: "Senior Management", path: "/seniors" },
   { icon: CalendarDays, label: "University Updates", path: "/events" },
   { icon: BookOpen, label: "All Resources", path: "/resources" },

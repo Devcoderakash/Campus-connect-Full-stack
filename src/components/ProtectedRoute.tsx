@@ -25,6 +25,8 @@ interface Props {
 export function ProtectedRoute({ children, requiredRole }: Props) {
   const { isAuthenticated, user, isLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   useEffect(() => {
     if (isLoading) return;
@@ -34,11 +36,22 @@ export function ProtectedRoute({ children, requiredRole }: Props) {
       return;
     }
 
-    // Optional role guard (e.g. admin-only pages)
-    if (requiredRole && user?.role !== requiredRole) {
-      navigate({ to: "/dashboard" });
+    // Force redirection to profile completion page if branch or year is empty
+    const isIncomplete = !user?.branch || !user?.year;
+    if (isIncomplete && currentPath !== "/complete-profile") {
+      navigate({ to: "/complete-profile" });
+      return;
     }
-  }, [isAuthenticated, isLoading, user, requiredRole, navigate]);
+
+    // Case-insensitive role guard (e.g. admin-only pages)
+    if (requiredRole) {
+      const userRoleLower = user?.role?.toLowerCase() || "";
+      const reqRoleLower = requiredRole.toLowerCase();
+      if (userRoleLower !== reqRoleLower) {
+        navigate({ to: "/dashboard" });
+      }
+    }
+  }, [isAuthenticated, isLoading, user, requiredRole, navigate, currentPath]);
 
   if (isLoading || !isAuthenticated) {
     return (

@@ -45,7 +45,17 @@ export function MentorCard({
             )}
           </div>
           <div className="flex-1 min-w-0 pr-8">
-            <h3 className="font-semibold truncate">{senior.name}</h3>
+            <h3 className="font-semibold truncate flex items-center gap-1.5">
+              {senior.name}
+              {(senior.verificationStatus === "approved" || senior.role?.toLowerCase() === "senior") && (
+                <span
+                  className="inline-flex items-center justify-center h-4.5 w-4.5 rounded-full bg-primary text-primary-foreground text-[9px] font-black shadow-glow shrink-0"
+                  title="Verified Senior Mentor"
+                >
+                  ✓
+                </span>
+              )}
+            </h3>
             <p className="text-xs text-muted-foreground">
               {senior.branch} · Year {senior.year}
             </p>

@@ -39,6 +39,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   googleLogin: (accessToken: string, googleProfile?: any) => Promise<void>;
   logout: () => void;
+  refetchUser: () => Promise<void>;
 }
 
 // ── Storage keys ───────────────────────────────────────────────────────────
@@ -154,6 +155,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  // ── Refetch Profile ───────────────────────────────────────────────────
+  const refetchUser = useCallback(async () => {
+    try {
+      const data = await api.get<AuthUser>("/users/profile");
+      setUser(data);
+    } catch (err) {
+      console.error("[AuthContext] Failed to refetch user:", err);
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -164,6 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         googleLogin,
         logout,
+        refetchUser,
       }}
     >
       {children}

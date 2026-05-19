@@ -398,6 +398,90 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+const getPendingSeniors = async (req, res) => {
+  try {
+    const pendingSeniors = await User.find({
+      $or: [{ role: "pending_senior" }, { verificationStatus: "pending" }],
+    })
+      .select("-password")
+      .sort({ createdAt: -1 });
+    res.json(pendingSeniors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const verifySenior = async (req, res) => {
+  try {
+    const { status, rejectionReason } = req.body;
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status selection",
+      });
+    }
+
+    // Attempt to move file on Google Drive if file ID exists
+    if (user.collegeIdDriveFileId) {
+      try {
+        const { getVerificationFolderStructure, moveFileBetweenFolders } = require("../services/googleDriveService");
+        const folderStructure = await getVerificationFolderStructure();
+        
+        const targetFolderId = status === "approved" 
+          ? folderStructure.approvedFolderId 
+          : folderStructure.rejectedFolderId;
+
+        await moveFileBetweenFolders(
+          user.collegeIdDriveFileId,
+          folderStructure.pendingFolderId,
+          targetFolderId
+        );
+      } catch (driveErr) {
+        console.error("⚠️ Failed to move file in Google Drive during verification:", driveErr.message);
+        // Continue database transition so that the system remains functional even if Google Drive returns a connection issue
+      }
+    }
+
+    // Set standard states and audit records
+    user.verificationReviewedAt = new Date();
+    user.verificationReviewedBy = req.user._id;
+
+    if (status === "approved") {
+      user.role = "senior";
+      user.verificationStatus = "approved";
+      user.verifiedBadge = true;
+      user.rejectionReason = "";
+    } else {
+      user.role = "junior"; // Revert to junior on rejection
+      user.verificationStatus = "rejected";
+      user.verifiedBadge = false;
+      user.rejectionReason = rejectionReason || "Your college ID verification was rejected by admin.";
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: `Senior verification request successfully ${status}`,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred during verification processing",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getUsers,
   deleteUser,
@@ -416,4 +500,6 @@ module.exports = {
   getSeniorAnalytics,
   createEvent,
   deleteEvent,
+  getPendingSeniors,
+  verifySenior,
 };

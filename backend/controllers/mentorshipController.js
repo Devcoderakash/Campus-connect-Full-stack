@@ -14,6 +14,10 @@ const requestMentorship = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (!["senior", "Senior"].includes(senior.role) || senior.verificationStatus !== "approved") {
+      return res.status(403).json({ message: "Mentorship can only be requested from verified, approved seniors" });
+    }
+
     if (seniorYear <= currentUserYear) {
       return res
         .status(403)
@@ -132,17 +136,27 @@ const getSeniors = async (req, res) => {
 
     // Enforce hierarchical mentorship: users can only see people strictly above their year
     const currentUserYear = req.user.year || 1;
+    
+    // Only verified, approved seniors are shown
     let query = {
-      year: { $gt: currentUserYear },
+      role: { $in: ["senior", "Senior"] },
+      verificationStatus: "approved",
       visibility: true,
     };
+
+    if (currentUserYear < 4) {
+      query.year = { $gt: currentUserYear };
+    } else {
+      query.year = { $gte: 4 }; // Show 4th year and alumni
+    }
 
     if (branch && branch !== "All") query.branch = branch;
 
     // If client specifically selected a year, intersect it with our hierarchy logic
     if (year && year !== "all") {
       const requestedYear = Number(year);
-      if (requestedYear > currentUserYear) {
+      const isAllowed = currentUserYear < 4 ? requestedYear > currentUserYear : requestedYear >= 4;
+      if (isAllowed) {
         query.year = requestedYear;
       } else {
         // If they ask for a year that isn't senior to them, return nothing

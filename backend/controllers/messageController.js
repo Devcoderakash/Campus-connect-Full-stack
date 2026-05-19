@@ -1,19 +1,25 @@
 const Message = require("../models/Message");
+const Conversation = require("../models/Conversation");
 const Mentorship = require("../models/Mentorship");
 const User = require("../models/User");
 
+/**
+ * GET /messages/:userId
+ * Retrieves full chat history between current user and other user.
+ * Marks all incoming messages from other user in this conversation as seen.
+ */
 const getChatHistory = async (req, res) => {
   try {
     const currentUserId = req.user._id;
     const otherUserId = req.params.userId;
 
-    // Verify the other user exists
+    // Verify other user exists
     const otherUser = await User.findById(otherUserId);
     if (!otherUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Validate an accepted mentorship exists between these two users
+    // Validate accepted mentorship exists between these two users
     const mentorship = await Mentorship.findOne({
       $or: [
         { juniorId: currentUserId, seniorId: otherUserId },
@@ -26,22 +32,43 @@ const getChatHistory = async (req, res) => {
       return res.status(403).json({ message: "Chat requires an accepted mentorship." });
     }
 
-    const rawMessages = await Message.find({
-      $or: [
-        { senderId: currentUserId, receiverId: otherUserId },
-        { senderId: otherUserId, receiverId: currentUserId },
-      ],
-    })
-      .sort({ createdAt: 1 })
-      .lean(); // returns plain JS objects, not Mongoose documents
+    // Find or create conversation
+    let conversation = await Conversation.findOne({
+      participants: { $all: [currentUserId, otherUserId] },
+    });
 
-    // Explicitly stringify all ObjectId fields so the frontend always
-    // gets a consistent plain string — never an ObjectId instance or BSON wrapper.
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [currentUserId, otherUserId],
+        unreadCount: new Map([
+          [currentUserId.toString(), 0],
+          [otherUserId.toString(), 0],
+        ]),
+      });
+    }
+
+    // Mark messages from other user as seen
+    await Message.updateMany(
+      { conversationId: conversation._id, receiverId: currentUserId, seen: false },
+      { $set: { seen: true } },
+    );
+
+    // Reset unread count for current user
+    conversation.unreadCount.set(currentUserId.toString(), 0);
+    await conversation.save();
+
+    // Fetch messages
+    const rawMessages = await Message.find({ conversationId: conversation._id })
+      .sort({ createdAt: 1 })
+      .lean();
+
     const messages = rawMessages.map((m) => ({
       ...m,
       _id: m._id.toString(),
       senderId: m.senderId.toString(),
-      receiverId: m.receiverId ? m.receiverId.toString() : null,
+      receiverId: m.receiverId.toString(),
+      conversationId: m.conversationId.toString(),
+      message: m.text || m.message, // Fallback for frontend compatibility
       createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : m.createdAt,
     }));
 
@@ -51,59 +78,77 @@ const getChatHistory = async (req, res) => {
   }
 };
 
+/**
+ * GET /messages/conversations
+ * Returns conversations for active mentorships.
+ */
 const getConversations = async (req, res) => {
   try {
     const currentUserId = req.user._id.toString();
 
+    // 1. Get all accepted mentorships
     const mentorships = await Mentorship.find({
       $or: [{ juniorId: currentUserId }, { seniorId: currentUserId }],
       status: "Accepted",
     })
-      .populate("juniorId", "name profileImage _id")
-      .populate("seniorId", "name profileImage _id");
+      .populate("juniorId", "name profileImage _id role verifiedBadge")
+      .populate("seniorId", "name profileImage _id role verifiedBadge");
 
     const conversations = await Promise.all(
       mentorships
-        .filter((m) => m.juniorId && m.seniorId) // Skip if either side failed to populate
+        .filter((m) => m.juniorId && m.seniorId)
         .map(async (m) => {
           const juniorIdStr = m.juniorId._id.toString();
           const seniorIdStr = m.seniorId._id.toString();
 
-          // The "other" user is whichever side is NOT the current user.
-          // Using explicit string comparison against both sides avoids
-          // the isCurrentJunior flip-flop bug.
           let otherUser;
           if (juniorIdStr === currentUserId) {
-            otherUser = m.seniorId; // current user is junior → other is senior
+            otherUser = m.seniorId;
           } else if (seniorIdStr === currentUserId) {
-            otherUser = m.juniorId; // current user is senior → other is junior
+            otherUser = m.juniorId;
           } else {
-            return null; // current user not in this mentorship — skip
+            return null;
           }
 
           const otherUserIdStr = otherUser._id.toString();
 
-          const lastMsg = await Message.findOne({
-            $or: [
-              { senderId: currentUserId, receiverId: otherUserIdStr },
-              { senderId: otherUserIdStr, receiverId: currentUserId },
-            ],
-          })
+          // Find or create conversation
+          let conversation = await Conversation.findOne({
+            participants: { $all: [currentUserId, otherUserIdStr] },
+          });
+
+          if (!conversation) {
+            conversation = await Conversation.create({
+              participants: [currentUserId, otherUserIdStr],
+              unreadCount: new Map([
+                [currentUserId, 0],
+                [otherUserIdStr, 0],
+              ]),
+            });
+          }
+
+          // Fetch the true last message
+          const lastMsg = await Message.findOne({ conversationId: conversation._id })
             .sort({ createdAt: -1 })
             .lean();
 
-          const unread = await Message.countDocuments({
-            senderId: otherUserIdStr,
-            receiverId: currentUserId,
-            isRead: false,
-          });
+          if (lastMsg) {
+            conversation.lastMessage = lastMsg.text || lastMsg.message;
+            conversation.lastMessageTime = lastMsg.createdAt;
+            await conversation.save();
+          }
+
+          const unread = conversation.unreadCount.get(currentUserId) || 0;
 
           return {
-            _id: otherUserIdStr,
+            _id: otherUserIdStr, // Frontend identifies conversation by the other participant's ID
+            conversationId: conversation._id.toString(),
             name: otherUser.name,
             profileImage: otherUser.profileImage ?? null,
-            lastMessage: lastMsg?.message ?? null,
-            lastMessageAt: lastMsg?.createdAt ?? m.createdAt,
+            role: otherUser.role,
+            verifiedBadge: otherUser.verifiedBadge ?? false,
+            lastMessage: conversation.lastMessage || null,
+            lastMessageAt: conversation.lastMessageTime || m.createdAt,
             unread,
           };
         }),
@@ -119,15 +164,19 @@ const getConversations = async (req, res) => {
   }
 };
 
-// saveMessage via API is mostly replaced by sockets, but we keep it as fallback
+/**
+ * POST /messages
+ * Fallback REST API for sending messages.
+ */
 const saveMessage = async (req, res) => {
   try {
     const { receiverId, message } = req.body;
+    const currentUserId = req.user._id;
 
     const mentorship = await Mentorship.findOne({
       $or: [
-        { juniorId: req.user._id, seniorId: receiverId },
-        { juniorId: receiverId, seniorId: req.user._id },
+        { juniorId: currentUserId, seniorId: receiverId },
+        { juniorId: receiverId, seniorId: currentUserId },
       ],
       status: "Accepted",
     });
@@ -136,12 +185,41 @@ const saveMessage = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized: Mentorship must be accepted." });
     }
 
-    const newMessage = await Message.create({
-      senderId: req.user._id,
-      receiverId,
-      message,
+    // Find or create conversation
+    let conversation = await Conversation.findOne({
+      participants: { $all: [currentUserId, receiverId] },
     });
-    res.status(201).json(newMessage);
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [currentUserId, receiverId],
+        unreadCount: new Map([
+          [currentUserId.toString(), 0],
+          [receiverId.toString(), 0],
+        ]),
+      });
+    }
+
+    // Save message
+    const newMessage = await Message.create({
+      senderId: currentUserId,
+      receiverId,
+      conversationId: conversation._id,
+      text: message.trim(),
+    });
+
+    // Update conversation state
+    conversation.lastMessage = message.trim();
+    conversation.lastMessageTime = newMessage.createdAt;
+    
+    const currentUnread = conversation.unreadCount.get(receiverId.toString()) || 0;
+    conversation.unreadCount.set(receiverId.toString(), currentUnread + 1);
+    await conversation.save();
+
+    res.status(201).json({
+      ...newMessage.toObject(),
+      message: newMessage.text, // Backwards compatibility
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

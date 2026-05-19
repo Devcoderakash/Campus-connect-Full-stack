@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CompleteProfileRouteImport } from './routes/complete-profile'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSeniorsRouteImport } from './routes/_app.seniors'
@@ -30,6 +31,11 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompleteProfileRoute = CompleteProfileRouteImport.update({
+  id: '/complete-profile',
+  path: '/complete-profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -84,6 +90,7 @@ const AppAdminRoute = AppAdminRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/admin': typeof AppAdminRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/admin': typeof AppAdminRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/complete-profile': typeof CompleteProfileRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_app/admin': typeof AppAdminRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/complete-profile'
     | '/login'
     | '/signup'
     | '/admin'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/complete-profile'
     | '/login'
     | '/signup'
     | '/admin'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/complete-profile'
     | '/login'
     | '/signup'
     | '/_app/admin'
@@ -169,6 +181,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  CompleteProfileRoute: typeof CompleteProfileRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
 }
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complete-profile': {
+      id: '/complete-profile'
+      path: '/complete-profile'
+      fullPath: '/complete-profile'
+      preLoaderRoute: typeof CompleteProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -289,6 +309,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  CompleteProfileRoute: CompleteProfileRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
 }

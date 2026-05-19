@@ -21,20 +21,24 @@ export function AppSidebar({ open, onClose }: { open: boolean; onClose: () => vo
   const allItems = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/resources", label: "Resources", icon: BookOpen },
-    { to: "/seniors", label: "Seniors", icon: Users },
+    { to: "/seniors", label: "Seniors", icon: Users, roles: ["junior", "senior", "admin", "Junior", "Senior", "Admin"] },
     {
       to: "/mentorship-requests",
       label: "Requests",
       icon: MessageCircle,
-      roles: ["Senior", "Admin"],
+      roles: ["senior", "admin", "Senior", "Admin"],
     },
-    { to: "/chat", label: "Chat", icon: MessageCircle },
+    { to: "/chat", label: "Chat", icon: MessageCircle, roles: ["junior", "senior", "admin", "Junior", "Senior", "Admin"] },
     { to: "/notifications", label: "Notifications", icon: Bell },
     { to: "/profile", label: "Profile", icon: User },
-    { to: "/admin", label: "Admin", icon: Shield, roles: ["Admin"] },
+    { to: "/admin", label: "Admin", icon: Shield, roles: ["admin", "Admin"] },
   ];
 
-  const items = allItems.filter((item) => !item.roles || item.roles.includes(user?.role as any));
+  const items = allItems.filter((item) => {
+    if (!item.roles) return true;
+    const userRoleLower = user?.role?.toLowerCase() || "";
+    return item.roles.map(r => r.toLowerCase()).includes(userRoleLower);
+  });
 
   const Content = (
     <div className="flex flex-col h-full p-4">
