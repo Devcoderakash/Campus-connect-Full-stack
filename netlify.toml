@@ -1,0 +1,15 @@
+[build]
+  # The root directory is the base
+  base = "./"
+  
+  # For Vite with TanStack Start, the static client output is inside dist/client
+  publish = "dist/client"
+  
+  # Command to build the production output
+  command = "npm run build"
+
+[[redirects]]
+  # Redirect all traffic to index.html for Single Page Application routing (fixes 404 on refresh)
+  from = "/*"
+  to = "/index.html"
+  status = 200
